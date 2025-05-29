@@ -1,6 +1,9 @@
 import { useNuiContext, useUiComponent } from './context/NuiContext';
 import { fetchNui } from './utils/fetchNui';
 import { useState } from 'react';
+import { Button } from './components/ui/button';
+import { Card, CardHeader, CardTitle, CardContent } from './components/ui/card';
+import { Alert, AlertTitle, AlertDescription } from './components/ui/alert';
 
 // Define the InventoryItem interface
 interface InventoryItem {
@@ -17,43 +20,48 @@ const InventoryUI = () => {
   
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-black/70">
-      <div className="bg-gray-800 rounded-lg shadow-xl p-6 w-96 text-white">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-bold">Inventory</h2>
-          <button 
-            onClick={() => {
-              fetchNui('close', { component: 'inventory' });
-              hide();
-            }}
-            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-          >
-            Close
-          </button>
-        </div>
-        
-        <div className="space-y-4">
-          <div className="p-4 bg-gray-700 rounded">
-            <h3 className="font-semibold mb-2">Items</h3>
-            {data?.items?.length > 0 ? (
+      <Card className="w-96">
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle>Inventory</CardTitle>
+            <Button 
+              variant="destructive"
+              onClick={() => {
+                fetchNui('close', { component: 'inventory' });
+                hide();
+              }}
+            >
+              Close
+            </Button>
+          </div>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <Card>
+            <CardContent className="pt-6">
+              <h3 className="font-semibold mb-2">Items</h3>
+              {data?.items?.length > 0 ? (
                 <ul className="space-y-2">
-                {data.items.map((item: InventoryItem) => (
-                  <li key={item.id} className="flex justify-between">
-                  <span>{item.name}</span>
-                  <span>x{item.quantity}</span>
-                  </li>
-                ))}
+                  {data.items.map((item: InventoryItem) => (
+                    <li key={item.id} className="flex justify-between">
+                      <span>{item.name}</span>
+                      <span>x{item.quantity}</span>
+                    </li>
+                  ))}
                 </ul>
-            ) : (
-              <p className="text-gray-400 italic">No items available</p>
-            )}
-          </div>
+              ) : (
+                <p className="text-muted-foreground italic">No items available</p>
+              )}
+            </CardContent>
+          </Card>
           
-          <div className="p-4 bg-gray-700 rounded">
-            <h3 className="font-semibold mb-2">Cash</h3>
-            <p>${data?.cash || 0}</p>
-          </div>
-        </div>
-      </div>
+          <Card>
+            <CardContent className="pt-6">
+              <h3 className="font-semibold mb-2">Cash</h3>
+              <p>${data?.cash || 0}</p>
+            </CardContent>
+          </Card>
+        </CardContent>
+      </Card>
     </div>
   );
 };
@@ -64,20 +72,18 @@ const NotificationUI = () => {
   
   if (!isVisible) return null;
   
-  const getNotificationClass = () => {
-    switch(data?.type) {
-      case 'error': return 'bg-red-500';
-      case 'success': return 'bg-green-500';
-      case 'warning': return 'bg-yellow-500';
-      default: return 'bg-blue-500';
-    }
+  const getVariant = () => {
+    return data?.type === 'error' ? 'destructive' : 'default';
   };
   
   return (
     <div className="fixed top-5 right-5 max-w-md">
-      <div className={`${getNotificationClass()} text-white p-4 rounded-lg shadow-lg`}>
-        {data?.message || 'Notification'}
-      </div>
+      <Alert variant={getVariant()}>
+        <AlertTitle>{data?.title || (data?.type || 'Info')}</AlertTitle>
+        <AlertDescription>
+          {data?.message || 'Notification message'}
+        </AlertDescription>
+      </Alert>
     </div>
   );
 };
@@ -116,52 +122,48 @@ function App() {
     
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black/70">
-        <div className="bg-gray-800 rounded-lg shadow-xl p-6 w-96 text-white">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="text-xl font-bold">FiveM NUI Boilerplate</h2>
-            <button 
-              onClick={handleClose}
-              className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
-            >
-              Close
-            </button>
-          </div>
-
-          <div className="space-y-4">
-            <div className="p-4 bg-gray-700 rounded">
-              <h3 className="font-semibold mb-2">Server Data</h3>
-              {serverData ? (
-                <pre className="text-sm overflow-auto max-h-40">
-                  {JSON.stringify(serverData, null, 2)}
-                </pre>
-              ) : (
-                <p className="text-gray-400 italic">No server data available</p>
-              )}
+        <Card className="w-96 bg-card text-card-foreground">
+          <CardHeader>
+            <div className="flex justify-between items-center">
+              <CardTitle>FiveM NUI Boilerplate</CardTitle>
+              <Button variant="destructive" onClick={handleClose}>
+                Close
+              </Button>
             </div>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Card className="bg-muted">
+              <CardContent className="pt-6">
+                <h3 className="font-semibold mb-2">Server Data</h3>
+                {serverData ? (
+                  <pre className="text-sm overflow-auto max-h-40">
+                    {JSON.stringify(serverData, null, 2)}
+                  </pre>
+                ) : (
+                  <p className="text-muted-foreground italic">No server data available</p>
+                )}
+              </CardContent>
+            </Card>
 
             {error && (
-              <div className="p-4 bg-red-900/50 rounded text-red-200 text-sm">
+              <div className="p-4 bg-destructive/20 rounded text-destructive text-sm">
                 {error}
               </div>
             )}
 
-            <button
+            <Button
               onClick={handleGetServerData}
               disabled={loading}
-              className="w-full bg-blue-500 hover:bg-blue-600 disabled:bg-blue-800 disabled:opacity-50 text-white py-2 rounded flex items-center justify-center"
+              className="w-full"
             >
-              {loading ? (
-                <span>Loading...</span>
-              ) : (
-                <span>Get Server Data</span>
-              )}
-            </button>
+              {loading ? 'Loading...' : 'Get Server Data'}
+            </Button>
 
-            <p className="text-sm text-gray-400 mt-4">
+            <p className="text-sm text-muted-foreground mt-4">
               Press F1 to toggle this UI
             </p>
-          </div>
-        </div>
+          </CardContent>
+        </Card>
       </div>
     );
   };

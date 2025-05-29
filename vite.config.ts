@@ -13,10 +13,6 @@ const filterAssets = (): Plugin => {
       if (id.includes('src/assets/react.svg')) {
         return { id: 'virtual:empty-module', external: false };
       }
-      // Block the vite.svg file from public
-      if (id.includes('public/vite.svg')) {
-        return { id: 'virtual:empty-module', external: false };
-      }
       return null;
     },
     load(id) {

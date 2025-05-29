@@ -117,3 +117,31 @@ RegisterCommand('notify', function(source, args)
         HideUIComponent('notification')
     end)
 end, false)
+
+-- Command to show the shadcn/ui demo
+RegisterCommand('shadcndemo', function()
+    ShowUIComponent('shadcnDemo', {})
+end, false)
+
+-- Callback for shadcn/ui demo server action
+RegisterNUICallback('serverAction', function(data, cb)
+    if data.action == 'demo' then
+        -- Simulate server action
+        Citizen.SetTimeout(500, function()
+            -- Send a notification to demonstrate UI updates
+            ShowUIComponent('notification', {
+                title = "Server Action",
+                message = "The server action was processed successfully!",
+                type = "success",
+                duration = 3000
+            })
+            
+            -- Auto-hide after duration
+            Citizen.SetTimeout(3000, function()
+                HideUIComponent('notification')
+            end)
+        end)
+    end
+    
+    cb({status = 'ok'})
+end)
