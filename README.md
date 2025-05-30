@@ -6,29 +6,33 @@ A modern boilerplate for FiveM NUI development using React, TypeScript, Vite, an
 
 - 🚀 React + TypeScript for UI
 - ⚡ Vite for fast development and bundling
-- 🎨 TailwindCSS for styling
+- 🎨 TailwindCSS + shadcn/ui for styling
 - 🔄 Hot Module Replacement (HMR) for development
 - 📝 TypeScript for type safety
 - 📦 NUI communication utilities
 - 🧩 Example client and server Lua scripts
 - 📺 Simple display toggle with F1 key
+- 🛠️ Automatic build copying to FiveM directory
 
 ## Project Structure
 
 ```
 fivem-nui-boilerplate/
-├── client/             # Client-side Lua scripts
-│   └── main.lua        # Main client script with NUI handlers
-├── server/             # Server-side Lua scripts
-│   └── main.lua        # Main server script with event handlers
-├── src/                # UI source code (React + TypeScript)
-│   ├── context/        # React context for NUI state
-│   ├── utils/          # Utility functions for NUI communication
-│   ├── App.tsx         # Main React component
-│   └── ...             # Other React components and files
-├── web/                # Built UI output (generated)
-├── fxmanifest.lua      # FiveM resource manifest
-└── ...                 # Other configuration files
+├── [fivem]/             # FiveM resource folder
+│   ├── client/          # Client-side Lua scripts
+│   ├── server/          # Server-side Lua scripts
+│   ├── fxmanifest.lua   # FiveM resource manifest
+│   └── web/             # Built UI output (auto-generated)
+├── src/                 # UI source code (React + TypeScript)
+│   ├── components/      # React components
+│   ├── context/         # React context for NUI state
+│   ├── lib/             # Utility libraries
+│   ├── utils/           # Utility functions for NUI communication
+│   ├── App.tsx          # Main React component
+│   └── ...              # Other React components and files
+├── components.json      # shadcn/ui configuration
+├── package.json         # Node.js dependencies and scripts
+└── ...                  # Other configuration files
 ```
 
 ## Getting Started
@@ -41,7 +45,7 @@ fivem-nui-boilerplate/
 
 ### Installation
 
-1. Clone this repository or download it into your FiveM resources folder
+1. Clone this repository or download it into your desired location
 2. Install dependencies:
    ```bash
    pnpm install
@@ -55,31 +59,56 @@ For UI development in a browser (without FiveM):
 pnpm dev
 ```
 
-For continuous building while testing in FiveM:
+For building and auto-copying to FiveM directory:
 
 ```bash
-pnpm watch
+pnpm build:fivem
+```
+
+For continuous building with auto-copy to FiveM (useful during development):
+
+```bash
+pnpm watch:fivem
 ```
 
 ### Building for Production
+
+Standard build (creates `web/` folder):
 
 ```bash
 pnpm build
 ```
 
-This will build the UI to the `web/` directory, which is referenced in the `fxmanifest.lua`.
+Build and copy to FiveM directory:
+
+```bash
+pnpm build:fivem
+```
+
+This will build the UI and automatically copy it to the `[fivem]/web/` directory, which is referenced in the `fxmanifest.lua`.
 
 ### Testing in FiveM
 
-1. Ensure the resource is in your FiveM server's resources folder
-2. Add `ensure fivem-nui-boilerplate` to your server.cfg
-3. Start or restart your FiveM server
-4. In-game, press F1 to toggle the NUI interface
+1. Copy the `[fivem]` folder to your FiveM server's resources folder
+2. Rename it to your desired resource name (e.g., `nui-boilerplate`)
+3. Add `ensure nui-boilerplate` to your server.cfg
+4. Build the UI with `pnpm build:fivem`
+5. Start or restart your FiveM server
+6. In-game, press F1 to toggle the NUI interface
+
+## Available Scripts
+
+- `pnpm dev` - Start development server for browser testing
+- `pnpm build` - Build for production (outputs to `web/`)
+- `pnpm build:fivem` - Build and copy to `[fivem]/web/`
+- `pnpm watch` - Watch for changes and rebuild
+- `pnpm watch:fivem` - Watch for changes, rebuild, and auto-copy to FiveM
+- `pnpm lint` - Run ESLint
 
 ## NUI Communication
 
 Dynamic Component System
-The boilerplate includes a dynamic component system in `NuiContext.tsx` that allows you to:
+The boilerplate includes a dynamic component system in [`NuiContext.tsx`](src/context/NuiContext.tsx) that allows you to:
 
 - Register, show, and hide UI components independently
 - Pass data to specific components
@@ -87,7 +116,7 @@ The boilerplate includes a dynamic component system in `NuiContext.tsx` that all
 
 ```tsx
 // In your React component:
-import { useUiComponent } from './context/NuiContext';
+import { useUiComponent } from '@/context/NuiContext';
 
 const MyComponent = () => {
   const { isVisible, data, hide } = useUiComponent('componentId');
@@ -101,14 +130,15 @@ const MyComponent = () => {
 ## From UI to Lua (Client)
 
 ```tsx
-import { fetchNui } from './utils/fetchNui';
+import { fetchNui } from '@/utils/fetchNui';
 
 // Example: Sending a message to the client script
 fetchNui('actionName', { key: 'value' });
 ```
 
 ## From Lua (Client) to UI
-```tsx
+
+```lua
 -- Example: Showing a specific UI component with data
 function ShowUIComponent(componentId, data)
     SendNUIMessage({
@@ -131,6 +161,18 @@ function HideUIComponent(componentId)
 end
 ```
 
+## shadcn/ui Integration
+
+This boilerplate comes pre-configured with shadcn/ui. You can add components using:
+
+```bash
+pnpm dlx shadcn@latest add alert
+pnpm dlx shadcn@latest add alert-dialog
+# etc.
+```
+
+The configuration uses the `@/` alias which points to the `src/` directory.
+
 ## Acknowledgments
 
 - [FiveM Documentation](https://docs.fivem.net/)
@@ -138,3 +180,4 @@ end
 - [TypeScript](https://www.typescriptlang.org/)
 - [Vite](https://vitejs.dev/)
 - [TailwindCSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)

@@ -6,13 +6,17 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
+    "build:fivem": "pnpm build && pnpm copy:fivem",
+    "copy:fivem": "node scripts/build.js",
     "lint": "eslint .",
     "preview": "vite preview",
-    "watch": "vite build --watch"
+    "watch": "vite build --watch",
+    "watch:fivem": "vite build --watch & nodemon --watch web --exec \"pnpm copy:fivem\""
   },
   "dependencies": {
     "@citizenfx/client": "2.0.15414-1",
     "@citizenfx/server": "2.0.14862-1",
+    "@radix-ui/react-alert-dialog": "^1.1.14",
     "@radix-ui/react-dialog": "^1.1.14",
     "@radix-ui/react-slot": "^1.2.3",
     "class-variance-authority": "^0.7.1",

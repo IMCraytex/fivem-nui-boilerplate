@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { onNuiEvent, isEnvBrowser, mockNuiEvents } from '../utils/fetchNui';
-import { config } from '../utils/config';
+import { onNuiEvent, isEnvBrowser, mockNuiEvents } from '@/utils/fetchNui';
+import { config } from '@/utils/config';
 
 // Define the structure for different UI components/screens
 export interface UiComponent {
@@ -172,10 +172,6 @@ export const NuiProvider: React.FC<{children: React.ReactNode}> = ({ children })
       
       // Register and show some example components for development
       showComponent('main', { title: 'Main Interface' });
-      showComponent('inventory', { items: [
-        { id: 1, name: 'Test Item', quantity: 5 },
-        { id: 2, name: 'Another Item', quantity: 10 }
-      ]});
     }
 
     // Clean up event listeners

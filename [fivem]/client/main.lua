@@ -94,35 +94,6 @@ function UpdateUIComponent(componentId, data)
     debugPrint('Updating UI component: ' .. componentId)
 end
 
--- Example: Command to show the inventory
-RegisterCommand('inventory', function()
-    local items = {
-        {id = 1, name = "Water Bottle", quantity = 3},
-        {id = 2, name = "Bread", quantity = 1},
-        {id = 3, name = "Bandage", quantity = 5}
-    }
-    ShowUIComponent('inventory', {items = items, cash = 500})
-end, false)
-
--- Example: Command to show a notification
-RegisterCommand('notify', function(source, args)
-    local message = table.concat(args, " ")
-    ShowUIComponent('notification', {
-        message = message or "Test notification",
-        type = "info",
-        duration = 3000 -- ms
-    })
-    -- Auto-hide after duration
-    Citizen.SetTimeout(3000, function()
-        HideUIComponent('notification')
-    end)
-end, false)
-
--- Command to show the shadcn/ui demo
-RegisterCommand('shadcndemo', function()
-    ShowUIComponent('shadcnDemo', {})
-end, false)
-
 -- Callback for shadcn/ui demo server action
 RegisterNUICallback('serverAction', function(data, cb)
     if data.action == 'demo' then
