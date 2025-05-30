@@ -1,9 +1,6 @@
--- Enable debugging mode (set to false in production)
-local debugMode = true
-
 -- Debug print function that only works when debug mode is enabled
 local function debugPrint(...)
-    if debugMode then
+    if Config.Debug then
         print('^2[NUI Boilerplate]^7', ...)
     end
 end

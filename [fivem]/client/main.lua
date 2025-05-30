@@ -1,12 +1,9 @@
--- Enable debugging mode (set to false in production)
-local debugMode = true
-
 -- Display/hide NUI
 local display = false
 
 -- Debug print function that only works when debug mode is enabled
 local function debugPrint(...)
-    if debugMode then
+    if Config.Debug then
         print('[NUI Boilerplate]', ...)
     end
 end

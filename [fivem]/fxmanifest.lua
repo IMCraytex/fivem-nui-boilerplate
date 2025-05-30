@@ -5,6 +5,8 @@ author 'Teezy Core Developments'
 description 'FiveM NUI Boilerplate with React, TypeScript, and TailwindCSS'
 version '1.0.0'
 
+shared_script 'config.lua'
+
 client_scripts {
     'client/*.lua'
 }
