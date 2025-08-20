@@ -171,11 +171,8 @@ export const NuiProvider: React.FC<{children: React.ReactNode}> = ({ children })
       setVisible(true);
       
       // Register and show some example components for development
-      showComponent('main', { title: 'Main Interface' });
-      showComponent('inventory', { items: [
-        { id: 1, name: 'Test Item', quantity: 5 },
-        { id: 2, name: 'Another Item', quantity: 10 }
-      ]});
+      showComponent('injuries', { injuries: ["Head wound", "Broken leg"], readOnly: true });
+      showComponent('deathscreen', {})
     }
 
     // Clean up event listeners
